@@ -1,15 +1,28 @@
-version: '3.1'
+version: '3'
 services:
-  db:
-    image: mysql
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
+  postgres:
+    image: postgres
+    hostname: postgres
     ports:
-    - "3306:3306"
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: register_client
     volumes:
-    - register_client_data:/var/lib/mysql
-    
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - "5555:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+
 volumes:
-  register_client_data: 
-  
+  postgres-data:
